@@ -95,3 +95,10 @@ class WorkingWithDB:
         res = self.cursor.execute("SELECT MAX(ID) FROM people;").fetchone()
         return res[0] + 1
 
+    def update_leaders(self, st, clubid):
+        self.cursor.execute('UPDATE clubs SET LeaderID = "' + str(st) + '" WHERE ID = ' + str(clubid) + ';')
+
+    def get_leaders(self, clubid):
+        res =self.cursor.execute("SELECT LeaderID FROM clubs WHERE ID = " + str(clubid) + ";").fetchone()
+        return res
+
