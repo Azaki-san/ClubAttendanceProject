@@ -9,7 +9,7 @@ class WorkingWithDB:
         self.next_people_id = 1
 
     def connect_to_database(self):
-        connection = sqlite3.connect("TelebotDB.db")
+        connection = sqlite3.connect("TelebotDB.sqbpro")
         cursor = connection.cursor()
         return cursor, connection
 
@@ -51,6 +51,11 @@ class WorkingWithDB:
 
     def change_amount_of_meetings(self, new_amount, id):
         self.cursor.execute("UPDATE clubs SET AmountOfMeetings = " + new_amount + " WHERE ID = " + str(id) + ";")
+        self.connection.commit()
+
+    def return_alias_by_tgid(self, tgid):
+        self.cursor.execute("SELECT Alias FROM people WHERE TelegramID = " + str(tgid) + ";")
+        res = self.cursor.fetchall()
         self.connection.commit()
 
 
