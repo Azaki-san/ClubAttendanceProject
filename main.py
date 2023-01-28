@@ -35,6 +35,7 @@ def callback_query(call):
     messageID = call.message.message_id
 
     if call.data == "adminAllClubs":
+        print(returnAllClubsKeyboard(LANG))
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
                               text=lang.adminFirst[LANG]["all_clubs"],
                               reply_markup=returnAllClubsKeyboard(LANG))

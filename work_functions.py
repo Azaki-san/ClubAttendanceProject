@@ -1,14 +1,20 @@
-import db
+import working_with_db as db
 import telebot
 import lang
+
+
 dbClone = db.WorkingWithDB()
-def getAllClubs(LANG, listOfClubs, idOfClubs):
+def getAllClubs(listOfClubs, idOfClubs):
     fullListOfClubs = []
+    print(idOfClubs)
     for i in range(len(listOfClubs)):
-        fullListOfClubs.append([listOfClubs[i], idOfClubs[i]])
+        fullListOfClubs.append([listOfClubs[i][0], str(eval(idOfClubs[i])[0])])
+    print(fullListOfClubs)
+    fullListOfClubs.sort(key=lambda x: x[0])
+    print(fullListOfClubs)
     return fullListOfClubs
 
-def printingDescription(clubInfo):
+def printingDescription(LANG, clubInfo):
     name = clubInfo[1]
     idLeader = eval(clubInfo[2])
     amountOfMeetings = clubInfo[3]
@@ -30,7 +36,7 @@ def printingDescription(clubInfo):
 # она реализована, просто находится в этом файле
 def returnAllClubsKeyboard(LANG):
     keyboard = telebot.types.InlineKeyboardMarkup()
-    allClubs = getAllClubs()
+    allClubs = getAllClubs(dbClone.return_all_clubs(), dbClone.return_all_clubids())
     for i in allClubs:
         keyboard.add(telebot.types.InlineKeyboardButton(text=i[0],
                                                         callback_data=i[1]))
