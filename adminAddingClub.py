@@ -1,45 +1,95 @@
-import lang
 import telebot
+
+import lang
 from work_functions import returnAllClubsKeyboard
 
 
 # СДЕЛАТЬ КНОПКУ НАЗАД ИЛИ ЧТО-ТО ПОДОБНОЕ
 # СДЕЛАТЬ ПЕРЕХОД В СПИСОК ВСЕХ КЛУБОВ В ПОСЛЕДНЕЙ ФУНКЦИИ
+
+
+
 def addNameClub(message, bot, LANG):
     userID = message.chat.id
     name_club = message.text
-
-    msg = bot.send_message(userID, lang.adminFirst[LANG]["addHeadClub"])
-    bot.register_next_step_handler(msg, addHeadClub, bot, LANG, name_club)
+    if name_club == lang.adminFirst[LANG]['cancel']:
+        bot.send_message(userID, lang.adminFirst[LANG]["addClubCancel"])
+        bot.send_message(userID, text=lang.adminFirst[LANG]["all_clubs"],
+                         reply_markup=returnAllClubsKeyboard(LANG))
+    else:
+        markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+        btn1 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['cancel'])
+        btn2 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['back'])
+        markup.add(btn1, btn2)
+        msg = bot.send_message(userID, lang.adminFirst[LANG]["addHeadClub"], reply_markup=markup)
+        bot.register_next_step_handler(msg, addHeadClub, bot, LANG, name_club)
 
 
 def addHeadClub(message, bot, LANG, name_club):
     userID = message.chat.id
     """Тут нужно подумать что принимать: алиас или еще какую-нибудь хрень."""
     head_club = message.text
+    markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 
-    msg = bot.send_message(userID, lang.adminFirst[LANG]["addClubMeetingCount"])
-    bot.register_next_step_handler(msg, addClubMeetingCount, bot, LANG, name_club, head_club)
+    if head_club == lang.adminFirst[LANG]['cancel']:
+        bot.send_message(userID, lang.adminFirst[LANG]["addClubCancel"])
+        bot.send_message(userID, text=lang.adminFirst[LANG]["all_clubs"],
+                         reply_markup=returnAllClubsKeyboard(LANG))
+    elif head_club == lang.adminFirst[LANG]['back']:
+        btn = telebot.types.KeyboardButton(lang.adminFirst[LANG]['cancel'])
+        markup.add(btn)
+        msg = bot.send_message(userID, text=lang.adminFirst[LANG]["addNameClub"], reply_markup=markup)
+        bot.register_next_step_handler(msg, addNameClub, bot, LANG)
+    else:
+        btn1 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['cancel'])
+        btn2 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['back'])
+        markup.add(btn1, btn2)
+        msg = bot.send_message(userID, lang.adminFirst[LANG]["addClubMeetingCount"], reply_markup = markup)
+        bot.register_next_step_handler(msg, addClubMeetingCount, bot, LANG, name_club, head_club)
 
 
 def addClubMeetingCount(message, bot, LANG, name_club, head_club):
     userID = message.chat.id
     # СДЕЛАТЬ ПРОВЕРКУ НА INT
     meeting_count = message.text
+    markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    checkingIfInt = 0
+    try:
+        a = int(meeting_count) + 0
+    except Exception:
+        checkingIfInt = 1
 
     '''Возможно это стоит вынести в отдельную функцию'''
-    markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-    btn1 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['confirm'])
-    btn2 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['cancel'])
-    markup.add(btn1, btn2)
+    if meeting_count == lang.adminFirst[LANG]['cancel']:
+        bot.send_message(userID, lang.adminFirst[LANG]["addClubCancel"])
+        bot.send_message(userID, text=lang.adminFirst[LANG]["all_clubs"],
+                         reply_markup=returnAllClubsKeyboard(LANG))
+    elif meeting_count == lang.adminFirst[LANG]['back'] or checkingIfInt:
+        btn1 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['cancel'])
+        btn2 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['back'])
+        markup.add(btn1, btn2)
+        text2 = lang.adminFirst[LANG]["addHeadClub"]
+        if checkingIfInt:
+            text2 = lang.adminFirst[LANG]["wrongData"]
+            msg = bot.send_message(userID, text=text2, reply_markup=markup)
+            bot.register_next_step_handler(msg, addClubMeetingCount, bot, LANG, name_club, head_club)
+        else:
+            msg = bot.send_message(userID, text=text2, reply_markup=markup)
+            bot.register_next_step_handler(msg, addHeadClub, bot, LANG, name_club)
+    else:
+        btn1 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['confirm'])
+        btn2 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['cancel'])
+        btn3 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['back'])
+        markup.add(btn1, btn2, btn3)
 
-    msg = bot.send_message(userID, lang.adminFirst[LANG]["addClubConfirmation"], reply_markup=markup)
-    bot.register_next_step_handler(msg, addClubConfirmation, bot, LANG, name_club, head_club, meeting_count)
+        msg = bot.send_message(userID, lang.adminFirst[LANG]["addClubConfirmation"], reply_markup=markup)
+        bot.register_next_step_handler(msg, addClubConfirmation, bot, LANG, name_club, head_club, meeting_count)
 
 
 def addClubConfirmation(message, bot, LANG, name_club, head_club, meeting_count):
     userID = message.chat.id
     confirmation = message.text
+    markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 
     if confirmation == lang.adminFirst[LANG]['confirm']:
         success = 1
@@ -50,7 +100,13 @@ def addClubConfirmation(message, bot, LANG, name_club, head_club, meeting_count)
             возможно пусть коля этим занимается'''
         else:  # не успех
             bot.send_message(userID, lang.adminFirst[LANG]['addClubFailed'])
+    elif confirmation == lang.adminFirst[LANG]['back']:
+        btn1 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['cancel'])
+        btn2 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['back'])
+        markup.add(btn1, btn2)
+        msg = bot.send_message(userID, text=lang.adminFirst[LANG]["addClubMeetingCount"], reply_markup=markup)
+        bot.register_next_step_handler(msg, addClubMeetingCount, bot, LANG, name_club, head_club)
     else:
         bot.send_message(userID, lang.adminFirst[LANG]["addClubCancel"])
-    bot.send_message(userID, text=lang.adminFirst[LANG]["all_clubs"],
+        bot.send_message(userID, text=lang.adminFirst[LANG]["all_clubs"],
                      reply_markup=returnAllClubsKeyboard(LANG))

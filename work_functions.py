@@ -1,12 +1,30 @@
 import db
 import telebot
 import lang
+dbClone = db.WorkingWithDB()
+def getAllClubs(LANG, listOfClubs, idOfClubs):
+    fullListOfClubs = []
+    for i in range(len(listOfClubs)):
+        fullListOfClubs.append([listOfClubs[i], idOfClubs[i]])
+    return fullListOfClubs
 
-def getAllClubs():
-    # вернуть список названий всех клубов в списке
-    # формат [['клуб1', '0', ['клуб2', '0']
-    # дёрнуть из функции getAllClubsNames и getAllClubsIds
-    return [['InnoGameClub', '0'], ['BDSM', '1'], ['InnoSportClub', '2']]
+def printingDescription(clubInfo):
+    name = clubInfo[1]
+    idLeader = eval(clubInfo[2])
+    amountOfMeetings = clubInfo[3]
+    description = clubInfo[4]
+    listOfAliases = []
+    for i in range(len(idLeader)):
+        listOfAliases.extend(dbClone.return_alias_by_tgid(idLeader[i]))
+    finalString = f"**{lang.adminFirst[LANG]['nameOfTheClub']}**: {name}\n**{lang.adminFirst[LANG]['clubHeads']}**: "
+    for i in range(len(listOfAliases)):
+        if i != len(listOfAliases) - 1:
+            finalString += f"{listOfAliases[i]}, "
+        else:
+            finalString += f"{listOfAliases[i]}"
+    finalString += f"**{lang.adminFirst[LANG]['amountOfMeetings']}**: {amountOfMeetings}"
+    finalString += f"**{lang.adminFirst[LANG]['clubDescription']}**: {description}"
+    return finalString
 
 
 # она реализована, просто находится в этом файле
