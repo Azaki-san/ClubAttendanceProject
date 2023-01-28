@@ -5,8 +5,6 @@ class WorkingWithDB:
 
     def __init__(self):
         self.cursor, self.connection = self.connect_to_database()
-        self.next_club_id = 1
-        self.next_people_id = 1
 
     def connect_to_database(self):
         connection = sqlite3.connect("TelebotDB.db", check_same_thread=False)
@@ -31,13 +29,13 @@ class WorkingWithDB:
         return res
 
     def create_new_club(self, ame, amount_of_meetings, leaders):
-        temp = ('INSERT INTO clubs (ID, Name, LeaderID, AmountOFMeetings) VALUES (' + str(self.next_club_id) + ', "' + ame + '", "' + str(leaders)
-                            + '", ' + str(amount_of_meetings) + ');')
+        temp = ('INSERT INTO clubs (ID, Name, LeaderID, AmountOFMeetings) VALUES (' + str(
+            self.get_next_club_id()) + ', "' + ame + '", "' + str(leaders)
+                + '", ' + str(amount_of_meetings) + ');')
         self.cursor.execute(temp)
         self.connection.commit()
         self.next_club_id += 1
         return 1
-
 
     def add_a_description(self, description, id):
         self.cursor.execute("UPDATE clubs SET Description = " + description + " WHERE ID = " + str(id) + ";")
@@ -82,8 +80,10 @@ class WorkingWithDB:
         self.cursor.execute("UPDATE people SET Type = " + str(type) + " WHERE TelegramID = " + str(teleid) + ";")
         self.connection.commit()
 
+    def get_next_club_id(self):
+        res = self.cursor.execute("SELECT MAX(ID) FROM clubs;")
+        return res + 1
 
-
-
-
-
+    def get_next_people_id(self):
+        res = self.cursor.execute("SELECT MAX(ID) FROM people;")
+        return res + 1
