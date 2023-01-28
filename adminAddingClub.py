@@ -104,7 +104,9 @@ def addClubConfirmation(message, bot, LANG, name_club, head_club, meeting_count)
                 head_club_ids.append(exist)
             else:
                 queue.append(i)
+        fileWithQueue.truncate(0)
         fileWithQueue.write(str(queue))
+        print(head_club_ids)
         success = dbClone.create_new_club(name_club, meeting_count, head_club_ids)
 
         # здесь должна быть попытка обновить базу данных

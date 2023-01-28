@@ -34,7 +34,6 @@ class WorkingWithDB:
                 + '", ' + str(amount_of_meetings) + ');')
         self.cursor.execute(temp)
         self.connection.commit()
-        self.next_club_id += 1
         return 1
 
     def add_a_description(self, description, id):
@@ -69,7 +68,7 @@ class WorkingWithDB:
         self.connection.commit()
 
     def is_exist(self, alias):
-        self.cursor.execute("SELECT TelegramID FROM people WHERE Alias = '?'", (alias,))
+        self.cursor.execute('SELECT TelegramID FROM people WHERE Alias = ?', (alias,))
         res = self.cursor.fetchall()
         if len(res) == 0:
             return -1
@@ -81,9 +80,9 @@ class WorkingWithDB:
         self.connection.commit()
 
     def get_next_club_id(self):
-        res = self.cursor.execute("SELECT MAX(ID) FROM clubs;")
-        return res + 1
+        res = self.cursor.execute("SELECT MAX(ID) FROM clubs;").fetchone()
+        return res[0] + 1
 
     def get_next_people_id(self):
-        res = self.cursor.execute("SELECT MAX(ID) FROM people;")
-        return res + 1
+        res = self.cursor.execute("SELECT MAX(ID) FROM people;").fetchone()
+        return res[0] + 1
