@@ -58,6 +58,28 @@ class WorkingWithDB:
         res = self.cursor.fetchall()
         self.connection.commit()
 
+    def add_a_picture(self, clubid, pict):
+        self.cursor.execute("UPDATE clubs SET Picture = " + pict + " WHERE ID = " + str(clubid) + ";")
+        self.connection.commit()
+
+    def register(self, teleid, alias):
+        self.cursor.execute("INSERT INTO people(ID, TelegramID, Alias, Type) VALUES(" + str(self.next_people_id)
+                            + ", " + str(teleid) + ", " + str(alias) + ", 2);")
+        self.connection.commit()
+
+    def is_exist(self, teleid):
+        self.cursor.execute("SELECT TelegramID FROM people WHERE TelegramID = " + str(teleid) + ";")
+        res = self.cursor.fetchall()
+        if len(res) == 0:
+            return -1
+        else:
+            return str(res[0])
+
+    def update_type(self, teleid, type):
+        self.cursor.execute("UPDATE people SET Type = " + str(type) + " WHERE TelegramID = " + str(teleid) + ";")
+        self.connection.commit()
+
+
 
 
 
