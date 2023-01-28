@@ -9,7 +9,7 @@ class WorkingWithDB:
         self.next_people_id = 1
 
     def connect_to_database(self):
-        connection = sqlite3.connect("TelebotDB.sqbpro")
+        connection = sqlite3.connect("TelebotDB.db")
         cursor = connection.cursor()
         return cursor, connection
 
