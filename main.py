@@ -2,8 +2,7 @@ import telebot
 
 
 import lang
-from db import checkAccountType
-from work_functions import returnAllClubsKeyboard
+from work_functions import returnAllClubsKeyboard, checkAccountType
 from adminAddingClub import addNameClub
 
 bot = telebot.TeleBot('1786952895:AAHY7ZdGvly2ygQT3EQIFztPyen4c-EcwiY')
@@ -18,7 +17,7 @@ ids = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13',
 def text_handler(message):
     userID = message.chat.id
     # проверка на тип аккаунта, на данный момент администратор единственный
-    if checkAccountType() == 1:
+    if checkAccountType() == 0:
         keyboard = telebot.types.InlineKeyboardMarkup()
         keyboard.add(telebot.types.InlineKeyboardButton(text=lang.adminFirst[LANG]["all_clubs"],
                                                         callback_data='adminAllClubs'))
@@ -27,6 +26,10 @@ def text_handler(message):
         bot.send_message(userID, f"{lang.adminFirst[LANG]['hello1']}"
                                           f" {message.from_user.first_name}! {lang.adminFirst[LANG]['hello2']}",
                          reply_markup=keyboard)
+    elif checkAccountType() == 1:
+        """Предоставить выбор как авторизоваться"""
+    else:
+        """обычный тип, отобразить список всех клубов для регистрации в них"""
 
 
 @bot.callback_query_handler(func=lambda call: True)

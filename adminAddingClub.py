@@ -1,7 +1,7 @@
 import telebot
 
 import lang
-from work_functions import returnAllClubsKeyboard
+from work_functions import returnAllClubsKeyboard, dbClone
 
 
 # СДЕЛАТЬ КНОПКУ НАЗАД ИЛИ ЧТО-ТО ПОДОБНОЕ
@@ -92,7 +92,21 @@ def addClubConfirmation(message, bot, LANG, name_club, head_club, meeting_count)
     markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 
     if confirmation == lang.adminFirst[LANG]['confirm']:
-        success = 1
+        head_club = head_club.split()
+        head_club_ids = []
+        fileWithQueue = open("queue.txt", 'r+')
+        strQueue = fileWithQueue.read()
+        print(strQueue)
+        queue = eval(strQueue)
+        for i in head_club:
+            exist = dbClone.is_exist(i)
+            if exist != -1:
+                head_club_ids.append(exist)
+            else:
+                queue.append(i)
+        fileWithQueue.write(str(queue))
+        success = dbClone.create_new_club(name_club, meeting_count, head_club_ids)
+
         # здесь должна быть попытка обновить базу данных
         if success:  # если успех, то
             bot.send_message(userID, lang.adminFirst[LANG]["addClubSuccess"])

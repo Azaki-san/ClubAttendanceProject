@@ -30,11 +30,14 @@ class WorkingWithDB:
             res[i] = str(res[i])
         return res
 
-    def create_new_club(self, name, amount_of_meetings, leaders):
-        self.cursor.execute("INSERT INTO clubs VALUES(" + str(self.next_club_id) + ", " + name + ", " + str(leaders)
-                            + ", " + str(amount_of_meetings) + ", " + "NULL);")
+    def create_new_club(self, ame, amount_of_meetings, leaders):
+        temp = ('INSERT INTO clubs (ID, Name, LeaderID, AmountOFMeetings) VALUES (' + str(self.next_club_id) + ', "' + ame + '", "' + str(leaders)
+                            + '", ' + str(amount_of_meetings) + ');')
+        self.cursor.execute(temp)
         self.connection.commit()
         self.next_club_id += 1
+        return 1
+
 
     def add_a_description(self, description, id):
         self.cursor.execute("UPDATE clubs SET Description = " + description + " WHERE ID = " + str(id) + ";")
@@ -67,8 +70,8 @@ class WorkingWithDB:
                             + ", " + str(teleid) + ", " + str(alias) + ", 2);")
         self.connection.commit()
 
-    def is_exist(self, teleid):
-        self.cursor.execute("SELECT TelegramID FROM people WHERE TelegramID = " + str(teleid) + ";")
+    def is_exist(self, alias):
+        self.cursor.execute("SELECT TelegramID FROM people WHERE Alias = ?", (alias,))
         res = self.cursor.fetchall()
         if len(res) == 0:
             return -1

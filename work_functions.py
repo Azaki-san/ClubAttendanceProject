@@ -43,3 +43,8 @@ def returnAllClubsKeyboard(LANG):
     keyboard.add(telebot.types.InlineKeyboardButton(text=lang.adminFirst[LANG]["add_club"],
                                                     callback_data='adminAddClub'))
     return keyboard
+
+
+def checkAccountType():
+
+    return 0
