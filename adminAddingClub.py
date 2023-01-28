@@ -101,10 +101,10 @@ def addClubConfirmation(message, bot, LANG, name_club, head_club, meeting_count)
         for i in head_club:
             exist = dbClone.is_exist(i)
             if exist != -1:
-                head_club_ids.append(exist)
+                head_club_ids.append(eval(exist)[0])
             else:
                 queue.append(i)
-        fileWithQueue.truncate(0)
+        fileWithQueue.seek(0)
         fileWithQueue.write(str(queue))
         print(head_club_ids)
         success = dbClone.create_new_club(name_club, meeting_count, head_club_ids)
