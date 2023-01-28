@@ -19,7 +19,7 @@ class WorkingWithDB:
         return res
 
     def return_all_clubs(self):
-        self.cursor.execute("SELECT Name FROM clubs;")
+        self.cursor.execute("SELECT Name FROM clubs ORDER by ID;")
         res = self.cursor.fetchall()
         return res
 
