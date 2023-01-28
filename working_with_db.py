@@ -38,7 +38,7 @@ class WorkingWithDB:
         return 1
 
     def add_a_description(self, description, id):
-        self.cursor.execute("UPDATE clubs SET Description = " + description + " WHERE ID = " + str(id) + ";")
+        self.cursor.execute("UPDATE clubs SET Description = '" + description + "' WHERE ID = " + str(id) + ";")
         self.connection.commit()
 
     def return_club_by_id(self, id):
@@ -47,7 +47,7 @@ class WorkingWithDB:
         return res
 
     def change_name_of_club(self, new_name, id):
-        self.cursor.execute("UPDATE clubs SET Name = " + new_name + " WHERE ID = " + str(id) + ";")
+        self.cursor.execute("UPDATE clubs SET Name = '" + new_name + "' WHERE ID = " + str(id) + ";")
         self.connection.commit()
 
     def change_amount_of_meetings(self, new_amount, id):
@@ -64,12 +64,12 @@ class WorkingWithDB:
         self.connection.commit()
 
     def register(self, teleid, alias):
-        self.cursor.execute("INSERT INTO people(ID, TelegramID, Alias, Type) VALUES(" + str(self.next_people_id)
-                            + ", " + str(teleid) + ", " + str(alias) + ", 2);")
+        self.cursor.execute("INSERT INTO people(ID, TelegramID, Alias, Type) VALUES(" + str(self.get_next_people_id())
+                            + ", " + str(teleid) + ", '" + str(alias) + "', 2);")
         self.connection.commit()
 
     def is_exist(self, alias):
-        self.cursor.execute("SELECT TelegramID FROM people WHERE Alias = ?", (alias,))
+        self.cursor.execute("SELECT TelegramID FROM people WHERE Alias = '?'", (alias,))
         res = self.cursor.fetchall()
         if len(res) == 0:
             return -1
