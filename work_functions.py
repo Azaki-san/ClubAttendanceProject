@@ -21,7 +21,10 @@ def printingDescription(LANG, clubInfo):
     name = clubInfo[1]
     idLeader = eval(clubInfo[2])
     amountOfMeetings = clubInfo[3]
-    description = clubInfo[4]
+    if len(clubInfo) == 5:
+        description = clubInfo[4]
+    else:
+        description = 'To be added by the Head'
     listOfAliases = []
     for i in range(len(idLeader)):
         listOfAliases.extend(dbClone.return_alias_by_tgid(idLeader[i]))
@@ -34,6 +37,8 @@ def printingDescription(LANG, clubInfo):
     finalString += f"**{lang.adminFirst[LANG]['amountOfMeetings']}**: {amountOfMeetings}"
     finalString += f"**{lang.adminFirst[LANG]['clubDescription']}**: {description}"
     return finalString
+
+
 
 
 # она реализована, просто находится в этом файле

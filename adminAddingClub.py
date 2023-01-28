@@ -1,7 +1,7 @@
 import telebot
 
 import lang
-from work_functions import returnAllClubsKeyboard, dbClone
+from work_functions import returnAllClubsKeyboard, dbClone, printingDescription
 
 
 # СДЕЛАТЬ КНОПКУ НАЗАД ИЛИ ЧТО-ТО ПОДОБНОЕ
@@ -55,9 +55,10 @@ def addClubMeetingCount(message, bot, LANG, name_club, head_club):
     markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     checkingIfInt = 0
     try:
-        a = int(meeting_count) + 0
+        a = int(meeting_count)
     except Exception:
-        checkingIfInt = 1
+        if meeting_count != lang.adminFirst[LANG]['back'] and meeting_count != lang.adminFirst[LANG]['cancel']:
+            checkingIfInt = 1
 
     '''Возможно это стоит вынести в отдельную функцию'''
     if meeting_count == lang.adminFirst[LANG]['cancel']:
@@ -81,8 +82,8 @@ def addClubMeetingCount(message, bot, LANG, name_club, head_club):
         btn2 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['cancel'])
         btn3 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['back'])
         markup.add(btn1, btn2, btn3)
-
-        msg = bot.send_message(userID, lang.adminFirst[LANG]["addClubConfirmation"], reply_markup=markup)
+        msg = bot.send_message(userID, printingDescription(LANG, [0, name_club, str(head_club.split()), meeting_count]), reply_markup=markup)
+        # msg = bot.send_message(userID, lang.adminFirst[LANG]["addClubConfirmation"], reply_markup=markup)
         bot.register_next_step_handler(msg, addClubConfirmation, bot, LANG, name_club, head_club, meeting_count)
 
 
@@ -103,7 +104,10 @@ def addClubConfirmation(message, bot, LANG, name_club, head_club, meeting_count)
             if exist != -1:
                 head_club_ids.append(eval(exist)[0])
             else:
-                queue.append(i)
+                if queue.get(i):
+                    queue[i].append(name_club)
+                else:
+                    queue[i] = [name_club]
         fileWithQueue.seek(0)
         fileWithQueue.write(str(queue))
         print(head_club_ids)
@@ -112,6 +116,8 @@ def addClubConfirmation(message, bot, LANG, name_club, head_club, meeting_count)
         # здесь должна быть попытка обновить базу данных
         if success:  # если успех, то
             bot.send_message(userID, lang.adminFirst[LANG]["addClubSuccess"])
+            bot.send_message(userID, text=lang.adminFirst[LANG]["all_clubs"],
+                             reply_markup=returnAllClubsKeyboard(LANG))
             '''отправить в call значение, чтобы вернуть админа к списку клубов. почитать как это сделать,
             возможно пусть коля этим занимается'''
         else:  # не успех
