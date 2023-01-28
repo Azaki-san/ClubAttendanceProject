@@ -1,9 +1,8 @@
 import working_with_db as db
 import telebot
 import lang
-import file
+from working_with_db import dbClone
 
-dbClone = db.WorkingWithDB()
 
 
 def getAllClubs(listOfClubs, idOfClubs):
@@ -17,25 +16,41 @@ def getAllClubs(listOfClubs, idOfClubs):
     return fullListOfClubs
 
 
+def getKeyboardleaderOrUser(userID, LANG):
+    keyboard = telebot.types.InlineKeyboardMarkup()
+    for i in range(0, dbClone.get_next_club_id()):
+        info = dbClone.return_club_by_id(i)[0]
+        leaders = eval(info[2])
+        name = info[1]
+        if userID in leaders:
+            keyboard.add(telebot.types.InlineKeyboardButton(text=name,
+                                                            callback_data=f'{i}'))
+    keyboard.add(telebot.types.InlineKeyboardButton(text=lang.leader[LANG]["choiceUser"],
+                                                    callback_data='userAuth'))
+    return keyboard
+
+
 def printingDescription(LANG, clubInfo):
     name = clubInfo[1]
     idLeader = eval(clubInfo[2])
     amountOfMeetings = clubInfo[3]
-    if len(clubInfo) == 5:
+    if len(clubInfo) >= 5:
         description = clubInfo[4]
     else:
         description = 'To be added by the Head'
     listOfAliases = []
     for i in range(len(idLeader)):
-        listOfAliases.extend(dbClone.return_alias_by_tgid(idLeader[i]))
-    finalString = f"**{lang.adminFirst[LANG]['nameOfTheClub']}**: {name}\n**{lang.adminFirst[LANG]['clubHeads']}**: "
+        alias = dbClone.return_alias_by_tgid(idLeader[i])
+        if alias:
+            listOfAliases.append(dbClone.return_alias_by_tgid(idLeader[i])[0][0])
+    finalString = f"***{lang.adminFirst[LANG]['nameOfTheClub']}***: {name}\n***{lang.adminFirst[LANG]['clubHeads']}***: "
     for i in range(len(listOfAliases)):
         if i != len(listOfAliases) - 1:
             finalString += f"{listOfAliases[i]}, "
         else:
-            finalString += f"{listOfAliases[i]}"
-    finalString += f"**{lang.adminFirst[LANG]['amountOfMeetings']}**: {amountOfMeetings}"
-    finalString += f"**{lang.adminFirst[LANG]['clubDescription']}**: {description}"
+            finalString += f"{listOfAliases[i]}\n"
+    finalString += f"***{lang.adminFirst[LANG]['amountOfMeetings']}***: {amountOfMeetings}\n"
+    finalString += f"***{lang.adminFirst[LANG]['clubDescription']}***: {description}"
     return finalString
 
 
@@ -56,15 +71,26 @@ def returnAllClubsKeyboard(LANG):
 def checkAccountType(teleid):
     res = dbClone.is_exist_by_teleid(teleid)
     if res == -1:
-        fOpened = file.open("queue.txt", "r+")
+        dbClone.register(teleid, dbClone.return_alias_by_tgid(teleid))
+        fOpened = open("queue.txt", "r+")
         text = fOpened.read()
         dict = eval(text)
         alias = dbClone.return_alias_by_tgid(teleid)
-        if alias in dict.keys():
+        if alias in dict:
+            for i in dict.get(alias):
+                listOldLeaders = eval(dbClone.get_leaders(i)[0])
+                listOldLeaders.append(teleid)
+                dbClone.update_leaders(str(listOldLeaders), i)
             del dict[alias]
+            dbClone.update_type(teleid, str(1))
             fOpened.seek(0)
             fOpened.write(str(dict))
+    """На этом моменте предполагается, что регистрация завершена, далее проверка на тип аккаунта."""
+    nowType = dbClone.return_type(teleid)[0][0]
+    return nowType
 
 
 
-    return 0
+print(dbClone.return_club_by_id(0))
+a = printingDescription('eng', (0, 'InnoGameClub', '[592651306, 981241]', 2, 'Лалка', None))
+print(a)

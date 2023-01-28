@@ -1,6 +1,5 @@
 import sqlite3
 
-
 class WorkingWithDB:
 
     def __init__(self):
@@ -56,7 +55,7 @@ class WorkingWithDB:
     def return_alias_by_tgid(self, tgid):
         self.cursor.execute("SELECT Alias FROM people WHERE TelegramID = " + str(tgid) + ";")
         res = self.cursor.fetchall()
-        self.connection.commit()
+        return res
 
     def add_a_picture(self, clubid, pict):
         self.cursor.execute("UPDATE clubs SET Picture = " + pict + " WHERE ID = " + str(clubid) + ";")
@@ -101,4 +100,7 @@ class WorkingWithDB:
     def get_leaders(self, clubid):
         res =self.cursor.execute("SELECT LeaderID FROM clubs WHERE ID = " + str(clubid) + ";").fetchone()
         return res
+
+
+dbClone = WorkingWithDB()
 

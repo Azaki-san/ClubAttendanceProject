@@ -9,7 +9,11 @@ adminFirst = {"ru": [],
                       "addClubSuccess": "Club successfully added.",
                       "addClubFailed": "Something went wrong while updating data base. Please try again later.",
                       "confirm": "Confirm", "cancel": "Cancel",
-                      "addClubCancel": "You cancelled adding club.", "back" : "Back", "wrongData" : "Wrong data!\nTry again",
-                      "nameOfTheClub" : "Name of the club", "clubHeads" : "Heads of the club", "amountOfMeetings" : "Amount of meetings per week",
-                      "clubDescription" : "Description"}}
+                      "addClubCancel": "You cancelled adding club.", "back": "Back",
+                      "wrongData": "Wrong data!\nTry again",
+                      "nameOfTheClub": "Name of the club", "clubHeads": "Heads of the club",
+                      "amountOfMeetings": "Amount of meetings per week",
+                      "clubDescription": "Description"}}
 
+leader = {"ru": [],
+          "eng": {"choiceUser": 'Auth as a student', "choiceText": "Who are you today? Student or head?"}}

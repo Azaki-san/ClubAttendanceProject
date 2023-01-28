@@ -105,9 +105,9 @@ def addClubConfirmation(message, bot, LANG, name_club, head_club, meeting_count)
                 head_club_ids.append(eval(exist)[0])
             else:
                 if queue.get(i):
-                    queue[i].append(name_club)
+                    queue[i].append(dbClone.get_next_club_id())
                 else:
-                    queue[i] = [name_club]
+                    queue[i] = [dbClone.get_next_club_id()]
         fileWithQueue.seek(0)
         fileWithQueue.write(str(queue))
         print(head_club_ids)

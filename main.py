@@ -2,8 +2,9 @@ import telebot
 
 
 import lang
-from work_functions import returnAllClubsKeyboard, checkAccountType
+from work_functions import returnAllClubsKeyboard, checkAccountType, getKeyboardleaderOrUser, printingDescription
 from adminAddingClub import addNameClub
+from work_functions import dbClone
 
 bot = telebot.TeleBot('1786952895:AAHY7ZdGvly2ygQT3EQIFztPyen4c-EcwiY')
 # заглушка на случай если будем выпендриваться и добавлять русский перевод бота
@@ -17,7 +18,8 @@ ids = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13',
 def text_handler(message):
     userID = message.chat.id
     # проверка на тип аккаунта, на данный момент администратор единственный
-    if checkAccountType() == 0:
+    accountType = checkAccountType(userID)
+    if accountType == 0:
         keyboard = telebot.types.InlineKeyboardMarkup()
         keyboard.add(telebot.types.InlineKeyboardButton(text=lang.adminFirst[LANG]["all_clubs"],
                                                         callback_data='adminAllClubs'))
@@ -26,7 +28,10 @@ def text_handler(message):
         bot.send_message(userID, f"{lang.adminFirst[LANG]['hello1']}"
                                           f" {message.from_user.first_name}! {lang.adminFirst[LANG]['hello2']}",
                          reply_markup=keyboard)
-    elif checkAccountType() == 1:
+    elif accountType == 1:
+        bot.send_message(userID, f"{lang.adminFirst[LANG]['hello1']}"
+                                 f" {message.from_user.first_name}! {lang.leader[LANG]['choiceText']}",
+                         reply_markup=getKeyboardleaderOrUser(userID, LANG))
         """Предоставить выбор как авторизоваться"""
     else:
         """обычный тип, отобразить список всех клубов для регистрации в них"""
@@ -52,7 +57,10 @@ def callback_query(call):
     elif call.data in ids:
         # загрузка информации о клубе
         # далее создать кнопки
-        pass
+
+        clubID = call.data
+        bot.send_message(userID, text=printingDescription(LANG, dbClone.return_club_by_id(clubID)[0]),
+                               parse_mode='Markdown')
 
 
 
