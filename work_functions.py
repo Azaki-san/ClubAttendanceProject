@@ -1,9 +1,11 @@
 import working_with_db as db
 import telebot
 import lang
-
+import file
 
 dbClone = db.WorkingWithDB()
+
+
 def getAllClubs(listOfClubs, idOfClubs):
     fullListOfClubs = []
     print(idOfClubs)
@@ -13,6 +15,7 @@ def getAllClubs(listOfClubs, idOfClubs):
     fullListOfClubs.sort(key=lambda x: x[0])
     print(fullListOfClubs)
     return fullListOfClubs
+
 
 def printingDescription(LANG, clubInfo):
     name = clubInfo[1]
@@ -45,6 +48,18 @@ def returnAllClubsKeyboard(LANG):
     return keyboard
 
 
-def checkAccountType():
+def checkAccountType(teleid):
+    res = dbClone.is_exist_by_teleid(teleid)
+    if res == -1:
+        fOpened = file.open("queue.txt", "r+")
+        text = fOpened.read()
+        dict = eval(text)
+        alias = dbClone.return_alias_by_tgid(teleid)
+        if alias in dict.keys():
+            del dict[alias]
+            fOpened.seek(0)
+            fOpened.write(str(dict))
+
+
 
     return 0

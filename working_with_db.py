@@ -75,6 +75,14 @@ class WorkingWithDB:
         else:
             return str(res[0])
 
+    def is_exist_by_teleid(self, teleid):
+        self.cursor.execute('SELECT TelegramID FROM people WHERE TelegramID = ?', (teleid,))
+        res = self.cursor.fetchall()
+        if len(res) == 0:
+            return -1
+        else:
+            return str(res[0])
+
     def update_type(self, teleid, type):
         self.cursor.execute("UPDATE people SET Type = " + str(type) + " WHERE TelegramID = " + str(teleid) + ";")
         self.connection.commit()
@@ -86,3 +94,4 @@ class WorkingWithDB:
     def get_next_people_id(self):
         res = self.cursor.execute("SELECT MAX(ID) FROM people;").fetchone()
         return res[0] + 1
+
