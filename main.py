@@ -39,8 +39,10 @@ def callback_query(call):
                               text=lang.adminFirst[LANG]["all_clubs"],
                               reply_markup=returnAllClubsKeyboard(LANG))
     elif call.data == "adminAddClub":
-        msg = bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                    text=lang.adminFirst[LANG]["addNameClub"])
+        markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+        btn = telebot.types.KeyboardButton(lang.adminFirst[LANG]['cancel'])
+        markup.add(btn)
+        msg = bot.send_message(userID, text=lang.adminFirst[LANG]["addNameClub"], reply_markup = markup)
         bot.register_next_step_handler(msg, addNameClub, bot, LANG)
 
     elif call.data in ids:
