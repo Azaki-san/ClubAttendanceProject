@@ -7,6 +7,17 @@ from work_functions import returnAllClubsKeyboard, dbClone, printingDescription
 # СДЕЛАТЬ КНОПКУ НАЗАД ИЛИ ЧТО-ТО ПОДОБНОЕ
 # СДЕЛАТЬ ПЕРЕХОД В СПИСОК ВСЕХ КЛУБОВ В ПОСЛЕДНЕЙ ФУНКЦИИ
 
+def nado(LANG, name_club, head_club, meeting_count):
+    finalString = f""
+    listOfAliases = head_club.split()
+    finalString = f"***{lang.adminFirst[LANG]['nameOfTheClub']}***: {name_club}\n***{lang.adminFirst[LANG]['clubHeads']}***: "
+    for i in range(len(listOfAliases)):
+        if i != len(listOfAliases) - 1:
+            finalString += f"{listOfAliases[i]}, "
+        else:
+            finalString += f"{listOfAliases[i]}\n"
+    finalString += f"***{lang.adminFirst[LANG]['amountOfMeetings']}***: {meeting_count}\n"
+    return finalString
 
 
 def addNameClub(message, bot, LANG):
@@ -44,7 +55,7 @@ def addHeadClub(message, bot, LANG, name_club):
         btn1 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['cancel'])
         btn2 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['back'])
         markup.add(btn1, btn2)
-        msg = bot.send_message(userID, lang.adminFirst[LANG]["addClubMeetingCount"], reply_markup = markup)
+        msg = bot.send_message(userID, lang.adminFirst[LANG]["addClubMeetingCount"], reply_markup=markup)
         bot.register_next_step_handler(msg, addClubMeetingCount, bot, LANG, name_club, head_club)
 
 
@@ -83,7 +94,9 @@ def addClubMeetingCount(message, bot, LANG, name_club, head_club):
         btn3 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['back'])
         markup.add(btn1, btn2, btn3)
         # msg = bot.send_message(userID, printingDescription(LANG, [0, name_club, str(head_club.split()), meeting_count]), reply_markup=markup)
-        msg = bot.send_message(userID, lang.adminFirst[LANG]["addClubConfirmation"], reply_markup=markup)
+        final_string = nado(LANG, name_club, head_club, meeting_count)
+        msg = bot.send_message(userID, f"{final_string}Confirm?", reply_markup=markup, parse_mode = "Markdown")
+
         bot.register_next_step_handler(msg, addClubConfirmation, bot, LANG, name_club, head_club, meeting_count)
 
 
@@ -131,4 +144,4 @@ def addClubConfirmation(message, bot, LANG, name_club, head_club, meeting_count)
     else:
         bot.send_message(userID, lang.adminFirst[LANG]["addClubCancel"])
         bot.send_message(userID, text=lang.adminFirst[LANG]["all_clubs"],
-                     reply_markup=returnAllClubsKeyboard(LANG))
+                         reply_markup=returnAllClubsKeyboard(LANG))
