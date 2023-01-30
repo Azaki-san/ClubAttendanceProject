@@ -82,8 +82,8 @@ def addClubMeetingCount(message, bot, LANG, name_club, head_club):
         btn2 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['cancel'])
         btn3 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['back'])
         markup.add(btn1, btn2, btn3)
-        msg = bot.send_message(userID, printingDescription(LANG, [0, name_club, str(head_club.split()), meeting_count]), reply_markup=markup)
-        # msg = bot.send_message(userID, lang.adminFirst[LANG]["addClubConfirmation"], reply_markup=markup)
+        # msg = bot.send_message(userID, printingDescription(LANG, [0, name_club, str(head_club.split()), meeting_count]), reply_markup=markup)
+        msg = bot.send_message(userID, lang.adminFirst[LANG]["addClubConfirmation"], reply_markup=markup)
         bot.register_next_step_handler(msg, addClubConfirmation, bot, LANG, name_club, head_club, meeting_count)
 
 
