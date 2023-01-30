@@ -18,7 +18,7 @@ ids = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13',
 def text_handler(message):
     userID = message.chat.id
     # проверка на тип аккаунта, на данный момент администратор единственный
-    accountType = checkAccountType(userID)
+    accountType = checkAccountType(userID, message.from_user.username)
     if accountType == 0:
         keyboard = telebot.types.InlineKeyboardMarkup()
         keyboard.add(telebot.types.InlineKeyboardButton(text=lang.adminFirst[LANG]["all_clubs"],

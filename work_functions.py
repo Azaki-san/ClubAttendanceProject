@@ -68,15 +68,17 @@ def returnAllClubsKeyboard(LANG):
     return keyboard
 
 
-def checkAccountType(teleid):
+def checkAccountType(teleid, alias):
     res = dbClone.is_exist_by_teleid(teleid)
     if res == -1:
-        dbClone.register(teleid, dbClone.return_alias_by_tgid(teleid))
+        dbClone.register(teleid, "@" + alias)
         fOpened = open("queue.txt", "r+")
         text = fOpened.read()
         dict = eval(text)
+        print(type(dict))
         alias = dbClone.return_alias_by_tgid(teleid)
-        if alias in dict:
+        print(alias)
+        if alias[0] in dict:
             for i in dict.get(alias):
                 listOldLeaders = eval(dbClone.get_leaders(i)[0])
                 listOldLeaders.append(teleid)
