@@ -101,6 +101,9 @@ class WorkingWithDB:
         res =self.cursor.execute("SELECT LeaderID FROM clubs WHERE ID = " + str(clubid) + ";").fetchone()
         return res
 
+    def remove_club(self, clubid):
+        self.cursor.execute("DELETE FROM clubs WHERE ID = '" + clubid + "';")
+
 
 dbClone = WorkingWithDB()
 
