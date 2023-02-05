@@ -3,7 +3,7 @@ adminFirst = {"ru": [],
                       "hello2": "What would you like to do?", "add_club": "Add club",
                       "addNameClub": "Enter name of the club", 'addHeadClub': "Enter alias/es of the head."
                                                                               " Format: @Alias1 @Alias2",
-                      "addClubMeetingCount": "Enter kolichestvo vstrech v nedelu",
+                      "addClubMeetingCount": "Enter amount of meetings per week",
                       "addClubConfirmation": "You entered something."
                                              " Confirm? Позже тут сделать структуризированный вывод.",
                       "addClubSuccess": "Club successfully added.",

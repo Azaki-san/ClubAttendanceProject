@@ -53,7 +53,7 @@ class WorkingWithDB:
         self.connection.commit()
 
     def return_alias_by_tgid(self, tgid):
-        self.cursor.execute("SELECT Alias FROM people WHERE TelegramID = " + str(tgid) + ";")
+        self.cursor.execute("SELECT Alias FROM people WHERE TelegramID = '" + str(tgid) + "';")
         res = self.cursor.fetchall()
         return res
 
@@ -98,7 +98,7 @@ class WorkingWithDB:
         self.cursor.execute('UPDATE clubs SET LeaderID = "' + str(st) + '" WHERE ID = ' + str(clubid) + ';')
 
     def get_leaders(self, clubid):
-        res =self.cursor.execute("SELECT LeaderID FROM clubs WHERE ID = " + str(clubid) + ";").fetchone()
+        res = self.cursor.execute("SELECT LeaderID FROM clubs WHERE ID = " + str(clubid) + ";").fetchone()
         return res
 
     def remove_club(self, clubid):
