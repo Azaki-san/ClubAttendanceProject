@@ -45,11 +45,8 @@ def printingDescription(LANG, clubInfo):
             listOfAliases.append(dbClone.return_alias_by_tgid(idLeader[i])[0][0])
     finalString = f"***{lang.adminFirst[LANG]['nameOfTheClub']}***: {name}\n***{lang.adminFirst[LANG]['clubHeads']}***: "
     for i in range(len(listOfAliases)):
-        if i != len(listOfAliases) - 1:
-            finalString += f"{listOfAliases[i]}, "
-        else:
-            finalString += f"{listOfAliases[i]}\n"
-    finalString += f"***{lang.adminFirst[LANG]['amountOfMeetings']}***: {amountOfMeetings}\n"
+        finalString += f"{listOfAliases[i]}, "
+    finalString += f"\n***{lang.adminFirst[LANG]['amountOfMeetings']}***: {amountOfMeetings}\n"
     finalString += f"***{lang.adminFirst[LANG]['clubDescription']}***: {description}"
     return finalString
 

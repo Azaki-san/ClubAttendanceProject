@@ -1,7 +1,7 @@
 import lang
 import telebot
 from working_with_db import WorkingWithDB, dbClone
-from work_functions import returnAllClubsKeyboard
+from work_functions import returnAllClubsKeyboard, printingDescription
 
 
 def general(message, bot, LANG, clubID):
@@ -35,11 +35,67 @@ def deleting(message, bot, LANG, clubID):
                          text=f'{lang.adminFirst[LANG]["cancelledDeleting"]}\n{lang.adminFirst[LANG]["all_clubs"]}',
                          reply_markup=returnAllClubsKeyboard(LANG))
 
-def editingClubInfo(clubID):
+def editingClubInfo(message, bot, LANG, clubID):
     markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-    btn1 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['cancel'])
-    btn2 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['editingDescription'])
-    btn3 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['editingDescription'])
-    btn4 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['editingDescription'])
-    btn5 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['editingDescription'])
-    print(clubID)
+    userID = message.chat.id
+    btn1 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['nameOfTheClub'])
+    btn2 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['clubHeads'])
+    btn3 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['amountOfMeetings'])
+    btn4 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['clubDescription'])
+    btn5 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['cancel'])
+    markup.add(btn1, btn2, btn3, btn4, btn5)
+    msg = bot.send_message(userID, lang.adminFirst[LANG]["choiceOfEditing"], reply_markup=markup)
+    bot.register_next_step_handler(msg, editing, bot, LANG, clubID)
+
+def editing(message, bot, LANG, clubID):
+    choice = message.text
+    userID = message.chat.id
+    if choice == lang.adminFirst[LANG]["clubHeads"]:
+        msg = bot.send_message(userID, text=lang.adminFirst[LANG]["addHeadClub"],
+                               parse_mode='Markdown')
+        bot.register_next_step_handler(msg, changingDataOfTheClub, bot, LANG, clubID, choice)
+    elif choice == lang.adminFirst[LANG]["cancel"]:
+        bot.send_message(userID,
+                         text=lang.adminFirst[LANG]["all_clubs"],
+                         reply_markup=returnAllClubsKeyboard(LANG))
+    else:
+        msg = bot.send_message(userID, lang.adminFirst[LANG]["enteringNewData"])
+        bot.register_next_step_handler(msg, changingDataOfTheClub, bot, LANG, clubID, choice)
+
+
+def changingDataOfTheClub(message, bot, LANG, clubID, type):
+    data = message.text
+    userID = message.chat.id
+    markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    if type == lang.adminFirst[LANG]['nameOfTheClub']:
+        dbClone.change_name_of_club(data, clubID)
+    elif type == lang.adminFirst[LANG]['clubHeads']:
+        head_club = data.split()
+        head_club_ids = []
+        fileWithQueue = open("queue.txt", 'r+')
+        strQueue = fileWithQueue.read()
+        print(strQueue)
+        queue = eval(strQueue)
+        for i in head_club:
+            exist = dbClone.is_exist(i)
+            if exist != -1:
+                head_club_ids.append(eval(exist)[0])
+            else:
+                if queue.get(i):
+                    queue[i].append(dbClone.get_next_club_id())
+                else:
+                    queue[i] = [dbClone.get_next_club_id()]
+        fileWithQueue.seek(0)
+        fileWithQueue.write(str(queue))
+        dbClone.update_leaders(str(head_club_ids), clubID)
+    elif type == lang.adminFirst[LANG]['amountOfMeetings']:
+        dbClone.change_amount_of_meetings(data, clubID)
+    elif type == lang.adminFirst[LANG]['clubDescription']:
+        dbClone.add_a_description(data, clubID)
+    msg = bot.send_message(userID, text=lang.adminFirst[LANG]["successfulEdition"],
+                           parse_mode='Markdown')
+    bot.send_message(userID, text=printingDescription(LANG, dbClone.return_club_by_id(clubID)[0]),
+                     parse_mode='Markdown')
+    bot.send_message(userID,
+                     text=lang.adminFirst[LANG]["all_clubs"],
+                     reply_markup=returnAllClubsKeyboard(LANG))
