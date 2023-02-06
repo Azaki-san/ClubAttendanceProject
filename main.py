@@ -5,6 +5,7 @@ import lang
 from work_functions import returnAllClubsKeyboard, checkAccountType, getKeyboardleaderOrUser, printingDescription
 from adminAddingClub import addNameClub
 from work_functions import dbClone
+import adminEditingClub
 
 bot = telebot.TeleBot('1786952895:AAHY7ZdGvly2ygQT3EQIFztPyen4c-EcwiY')
 # заглушка на случай если будем выпендриваться и добавлять русский перевод бота
@@ -12,6 +13,7 @@ LANG = "eng"
 ids = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
        '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38',
        '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50']
+
 
 
 @bot.message_handler(content_types=['text'])
@@ -57,10 +59,15 @@ def callback_query(call):
     elif call.data in ids:
         # загрузка информации о клубе
         # далее создать кнопки
-
+        markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+        btn1 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['editingDescription'])
+        btn2 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['deletingClub'])
+        markup.add(btn1, btn2)
         clubID = call.data
-        bot.send_message(userID, text=printingDescription(LANG, dbClone.return_club_by_id(clubID)[0]),
-                               parse_mode='Markdown')
+        msg = bot.send_message(userID, text=printingDescription(LANG, dbClone.return_club_by_id(clubID)[0]),
+                               parse_mode='Markdown', reply_markup=markup)
+        bot.register_next_step_handler(msg, adminEditingClub.general, bot, LANG, clubID)
+
 
 
 
