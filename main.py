@@ -62,7 +62,8 @@ def callback_query(call):
         markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         btn1 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['editingDescription'])
         btn2 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['deletingClub'])
-        markup.add(btn1, btn2)
+        btn3 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['back'])
+        markup.add(btn1, btn2, btn3)
         clubID = call.data
         msg = bot.send_message(userID, text=printingDescription(LANG, dbClone.return_club_by_id(clubID)[0]),
                                parse_mode='Markdown', reply_markup=markup)
