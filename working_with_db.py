@@ -88,7 +88,10 @@ class WorkingWithDB:
 
     def get_next_club_id(self):
         res = self.cursor.execute("SELECT MAX(ID) FROM clubs;").fetchone()
-        return res[0] + 1
+        if res[0] is None:
+            return 1
+        else:
+            return res[0] + 1
 
     def get_next_people_id(self):
         res = self.cursor.execute("SELECT MAX(ID) FROM people;").fetchone()
@@ -103,6 +106,7 @@ class WorkingWithDB:
 
     def remove_club(self, clubid):
         self.cursor.execute("DELETE FROM clubs WHERE ID = '" + clubid + "';")
+        self.connection.commit()
 
 
 dbClone = WorkingWithDB()
