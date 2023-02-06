@@ -13,8 +13,10 @@ adminFirst = {"ru": [],
                       "wrongData": "Wrong data!\nTry again",
                       "nameOfTheClub": "Name of the club", "clubHeads": "Heads of the club",
                       "amountOfMeetings": "Amount of meetings per week",
-                      "clubDescription": "Description", "editingDescription" : "Edit the description",
-                      "deletingClub": "Delete the club", "successfulClubDeleting":"The club was successfully deleted"}}
+                      "clubDescription": "Description", "editingDescription": "Edit the description",
+                      "deletingClub": "Delete the club", "successfulClubDeleting": "The club was successfully deleted",
+                      "confirmingDeleting": "Are you sure you want to delete the club?",
+                      "cancelledDeleting": "The deleting of the club was cancelled"}}
 
 leader = {"ru": [],
           "eng": {"choiceUser": 'Auth as a student', "choiceText": "Who are you today? Student or head?"}}
