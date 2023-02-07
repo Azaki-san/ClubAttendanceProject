@@ -12,10 +12,19 @@ def nado(LANG, name_club, head_club, meeting_count):
     listOfAliases = head_club.split()
     finalString = f"***{lang.adminFirst[LANG]['nameOfTheClub']}***: {name_club}\n***{lang.adminFirst[LANG]['clubHeads']}***: "
     for i in range(len(listOfAliases)):
+        k = listOfAliases[i]
+        res = ''
+        for j in k:
+            if j != '_':
+                res += j
+            else:
+                res += '\\'
+                res += j
         if i != len(listOfAliases) - 1:
-            finalString += f"{listOfAliases[i]}, "
+
+            finalString += f"{res}, "
         else:
-            finalString += f"{listOfAliases[i]}\n"
+            finalString += f"{res}\n"
     finalString += f"***{lang.adminFirst[LANG]['amountOfMeetings']}***: {meeting_count}\n"
     return finalString
 
@@ -95,7 +104,8 @@ def addClubMeetingCount(message, bot, LANG, name_club, head_club):
         markup.add(btn1, btn2, btn3)
         # msg = bot.send_message(userID, printingDescription(LANG, [0, name_club, str(head_club.split()), meeting_count]), reply_markup=markup)
         final_string = nado(LANG, name_club, head_club, meeting_count)
-        msg = bot.send_message(userID, f"{final_string}Confirm?", reply_markup=markup, parse_mode = "Markdown")
+        print(final_string)
+        msg = bot.send_message(userID, f"{final_string}Confirm?", reply_markup=markup, parse_mode="MarkdownV2")
 
         bot.register_next_step_handler(msg, addClubConfirmation, bot, LANG, name_club, head_club, meeting_count)
 

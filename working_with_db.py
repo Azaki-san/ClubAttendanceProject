@@ -31,6 +31,7 @@ class WorkingWithDB:
         temp = ('INSERT INTO clubs (ID, Name, LeaderID, AmountOFMeetings) VALUES (' + str(
             self.get_next_club_id()) + ', "' + ame + '", "' + str(leaders)
                 + '", ' + str(amount_of_meetings) + ');')
+        print(temp)
         self.cursor.execute(temp)
         self.connection.commit()
         return 1

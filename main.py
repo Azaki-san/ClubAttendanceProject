@@ -19,6 +19,7 @@ ids = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13',
 @bot.message_handler(content_types=['text'])
 def text_handler(message):
     userID = message.chat.id
+    print(userID)
     # проверка на тип аккаунта, на данный момент администратор единственный
     accountType = checkAccountType(userID, message.from_user.username)
     if accountType == 0:
