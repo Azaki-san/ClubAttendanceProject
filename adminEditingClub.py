@@ -113,4 +113,6 @@ def changingDataOfTheClub(message, bot, LANG, clubID, type):
         bot.send_message(userID, text=printingDescription(LANG, dbClone.return_club_by_id(clubID)[0]),
                                parse_mode='Markdown', reply_markup=markup)
         editingClubInfo(message, bot, LANG, clubID)
+    else:
+        editingClubInfo(message, bot, LANG, clubID)
 
