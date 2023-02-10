@@ -18,7 +18,7 @@ adminFirst = {"ru": [],
                       "confirmingDeleting": "Are you sure you want to delete the club?",
                       "cancelledDeleting": "The deleting of the club was cancelled",
                       "choiceOfEditing": "What would you like to edit?", "enteringNewData":"Enter the new data",
-                      "successfulEdition":"The data was successfully edited"}}
+                      "successfulEdition":"The data was successfully edited", "tryAgain" : "Something went wrong, try again"}}
 
 leader = {"ru": [],
           "eng": {"choiceUser": 'Auth as a student', "choiceText": "Who are you today? Student or head?"}}

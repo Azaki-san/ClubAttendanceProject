@@ -73,9 +73,12 @@ def editing(message, bot, LANG, clubID):
         bot.send_message(userID,
                          text=lang.adminFirst[LANG]["all_clubs"],
                          reply_markup=returnAllClubsKeyboard(LANG))
-    else:
+    elif choice == lang.adminFirst[LANG]["nameOfTheClub"] or choice == lang.adminFirst[LANG]["amountOfMeetings"] or choice == lang.adminFirst[LANG]["clubDescription"]:
         msg = bot.send_message(userID, lang.adminFirst[LANG]["enteringNewData"], reply_markup = markup)
         bot.register_next_step_handler(msg, changingDataOfTheClub, bot, LANG, clubID, choice)
+    else:
+        msg = bot.send_message(userID, lang.adminFirst[LANG]["tryAgain"], reply_markup=markup)
+        editingClubInfo(msg, bot, LANG, clubID)
 
 
 def changingDataOfTheClub(message, bot, LANG, clubID, type):
