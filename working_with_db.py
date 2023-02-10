@@ -109,6 +109,8 @@ class WorkingWithDB:
         self.cursor.execute("DELETE FROM clubs WHERE ID = '" + clubid + "';")
         self.connection.commit()
 
+    def add_type(self, id, type):
+        self.cursor.execute("UPDATE clubs SET Type = " + str(type) + " WHERE ID = " + str(id) + ";")
 
 dbClone = WorkingWithDB()
 
