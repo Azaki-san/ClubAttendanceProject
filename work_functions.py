@@ -4,7 +4,6 @@ import lang
 from working_with_db import dbClone
 
 
-
 def getAllClubs(listOfClubs, idOfClubs):
     fullListOfClubs = []
     print(idOfClubs)
@@ -44,13 +43,28 @@ def printingDescription(LANG, clubInfo):
         if alias:
             listOfAliases.append(dbClone.return_alias_by_tgid(idLeader[i])[0][0])
     finalString = f"***{lang.adminFirst[LANG]['nameOfTheClub']}***: {name}\n***{lang.adminFirst[LANG]['clubHeads']}***: "
-    for i in range(len(listOfAliases)):
-        finalString += f"{listOfAliases[i]}, "
+    finalString += getParsedAliases(listOfAliases)
     finalString += f"\n***{lang.adminFirst[LANG]['amountOfMeetings']}***: {amountOfMeetings}\n"
     finalString += f"***{lang.adminFirst[LANG]['clubDescription']}***: {description}"
     return finalString
 
 
+def getParsedAliases(listOfAliases):
+    finalString = ''
+    for i in range(len(listOfAliases)):
+        k = listOfAliases[i]
+        res = ''
+        for j in k:
+            if j != '_':
+                res += j
+            else:
+                res += '\\'
+                res += j
+        if i != len(listOfAliases) - 1:
+            finalString += f"{res}, "
+        else:
+            finalString += f"{res}"
+    return finalString
 
 
 # она реализована, просто находится в этом файле
@@ -68,13 +82,13 @@ def returnAllClubsKeyboard(LANG):
 def checkAccountType(teleid, alias):
     res = dbClone.is_exist_by_teleid(teleid)
     if res == -1:
-        dbClone.register(teleid, "@" + alias)
+        dbClone.register(teleid, "@" + alias.lower())
         fOpened = open("queue.txt", "r+")
         text = fOpened.read()
         dict = eval(text)
         print(type(dict))
         alias = dbClone.return_alias_by_tgid(teleid)
-        print(alias)
+        dbClone.update_type(teleid, str(0))
         if alias[0] in dict:
             for i in dict.get(alias):
                 listOldLeaders = eval(dbClone.get_leaders(i)[0])
@@ -87,7 +101,6 @@ def checkAccountType(teleid, alias):
     """На этом моменте предполагается, что регистрация завершена, далее проверка на тип аккаунта."""
     nowType = dbClone.return_type(teleid)[0][0]
     return nowType
-
 
 
 print(dbClone.return_club_by_id(0))

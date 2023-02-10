@@ -53,8 +53,9 @@ def editingClubInfo(message, bot, LANG, clubID):
     btn2 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['clubHeads'])
     btn3 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['amountOfMeetings'])
     btn4 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['clubDescription'])
-    btn5 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['cancel'])
-    markup.add(btn1, btn2, btn3, btn4, btn5)
+    btn5 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['photoLogo'])
+    btn6 = telebot.types.KeyboardButton(lang.adminFirst[LANG]['cancel'])
+    markup.add(btn1, btn2, btn3, btn4, btn5, btn6)
     msg = bot.send_message(userID, lang.adminFirst[LANG]["choiceOfEditing"], reply_markup=markup)
     bot.register_next_step_handler(msg, editing, bot, LANG, clubID)
 
@@ -111,6 +112,9 @@ def changingDataOfTheClub(message, bot, LANG, clubID, type):
             dbClone.change_amount_of_meetings(data, clubID)
         elif type == lang.adminFirst[LANG]['clubDescription']:
             dbClone.add_a_description(data, clubID)
+        elif type == lang.adminFirst[LANG]['photoLogo']:
+            msg = bot.send_message(userID, text=lang.adminFirst[LANG]["addPhoto"])
+            bot.register_next_step_handler(msg, changingPhoto)
         msg = bot.send_message(userID, text=lang.adminFirst[LANG]["successfulEdition"],
                                parse_mode='Markdown')
         bot.send_message(userID, text=printingDescription(LANG, dbClone.return_club_by_id(clubID)[0]),

@@ -1,7 +1,7 @@
 import telebot
 
 import lang
-from work_functions import returnAllClubsKeyboard, dbClone, printingDescription
+from work_functions import returnAllClubsKeyboard, dbClone, printingDescription, getParsedAliases
 
 
 # СДЕЛАТЬ КНОПКУ НАЗАД ИЛИ ЧТО-ТО ПОДОБНОЕ
@@ -11,20 +11,9 @@ def nado(LANG, name_club, head_club, meeting_count):
     finalString = f""
     listOfAliases = head_club.split()
     finalString = f"***{lang.adminFirst[LANG]['nameOfTheClub']}***: {name_club}\n***{lang.adminFirst[LANG]['clubHeads']}***: "
-    for i in range(len(listOfAliases)):
-        k = listOfAliases[i]
-        res = ''
-        for j in k:
-            if j != '_':
-                res += j
-            else:
-                res += '\\'
-                res += j
-        if i != len(listOfAliases) - 1:
-
-            finalString += f"{res}, "
-        else:
-            finalString += f"{res}\n"
+    finalString += getParsedAliases(listOfAliases) + '\n'
+    finalString += f"***{lang.adminFirst[LANG]['clubDescription']}***: {lang.adminFirst[LANG]['willAdd']}\n"
+    finalString += f"***{lang.adminFirst[LANG]['photoLogo']}***: {lang.adminFirst[LANG]['willAdd']}\n"
     finalString += f"***{lang.adminFirst[LANG]['amountOfMeetings']}***: {meeting_count}\n"
     return finalString
 
@@ -120,7 +109,6 @@ def addClubConfirmation(message, bot, LANG, name_club, head_club, meeting_count)
         head_club_ids = []
         fileWithQueue = open("queue.txt", 'r+')
         strQueue = fileWithQueue.read()
-        print(strQueue)
         queue = eval(strQueue)
         for i in head_club:
             exist = dbClone.is_exist(i)

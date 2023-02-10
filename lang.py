@@ -17,8 +17,11 @@ adminFirst = {"ru": [],
                       "deletingClub": "Delete the club", "successfulClubDeleting": "The club was successfully deleted",
                       "confirmingDeleting": "Are you sure you want to delete the club?",
                       "cancelledDeleting": "The deleting of the club was cancelled",
-                      "choiceOfEditing": "What would you like to edit?", "enteringNewData":"Enter the new data",
-                      "successfulEdition":"The data was successfully edited", "tryAgain" : "Something went wrong, try again"}}
+                      "choiceOfEditing": "What would you like to edit?", "enteringNewData": "Enter the new data",
+                      "successfulEdition": "The data was successfully edited",
+                      "tryAgain": "Something went wrong, try again",
+                      "willAdd": "will be added by the Head", "photoLogo": "Photo/Logo",
+                      "addPhoto": "Attach and send image that you want to use as a club photo/logo"}}
 
 leader = {"ru": [],
           "eng": {"choiceUser": 'Auth as a student', "choiceText": "Who are you today? Student or head?"}}

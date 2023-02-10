@@ -68,7 +68,7 @@ class WorkingWithDB:
         self.connection.commit()
 
     def is_exist(self, alias):
-        self.cursor.execute('SELECT TelegramID FROM people WHERE Alias = ?', (alias,))
+        self.cursor.execute('SELECT TelegramID FROM people WHERE Alias = ?', (alias.lower(),))
         res = self.cursor.fetchall()
         if len(res) == 0:
             return -1
